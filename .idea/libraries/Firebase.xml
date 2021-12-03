@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Firebase">
+    <CLASSES>
+      <root url="file:///media/assignatura/Curs 2021-2022/2DAM/AD/Drivers2021/Firebase" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file:///media/assignatura/Curs 2021-2022/2DAM/AD/Drivers2021/Firebase" />
+    </SOURCES>
+    <jarDirectory url="file:///media/assignatura/Curs 2021-2022/2DAM/AD/Drivers2021/Firebase" recursive="false" />
+    <jarDirectory url="file:///media/assignatura/Curs 2021-2022/2DAM/AD/Drivers2021/Firebase" recursive="false" type="SOURCES" />
+  </library>
+</component>
