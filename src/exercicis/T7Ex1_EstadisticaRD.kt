@@ -22,7 +22,7 @@ import java.awt.EventQueue
 class EstadisticaRD : JFrame() {
 
     val etProv = JLabel("Provincia: ")
-    val provincia = JComboBox<String>()
+    val cmbProvincia = JComboBox<String>()
 
     val etiqueta = JLabel("Missatges:")
     val area = JTextArea()
@@ -38,7 +38,7 @@ class EstadisticaRD : JFrame() {
 
         val panell1 = JPanel(FlowLayout())
         panell1.add(etProv)
-        panell1.add(provincia)
+        panell1.add(cmbProvincia)
         getContentPane().add(panell1, BorderLayout.NORTH)
 
         val panell2 = JPanel(BorderLayout())
@@ -59,24 +59,57 @@ class EstadisticaRD : JFrame() {
 
         FirebaseApp.initializeApp(options)
 
-        val arrel = FirebaseDatabase.getInstance().getReference("xat-ad")
+            val arrel = FirebaseDatabase.getInstance().getReference("EstadisticaVariacioPoblacional")
         // Posar tota la llista de províncies al JComboBox anomenat provincia
-        provincia.addItem("Prueba de item")
-        provincia.addItem("Otro item")
-        arrel.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                provincia.addItem(dataSnapshot.getValue().toString())
+        arrel.addChildEventListener(object : ChildEventListener{
+            override fun onChildAdded(data: DataSnapshot?, p1: String?) {
+                cmbProvincia.addItem(data!!.child("nombre").value.toString())
             }
 
-            override fun onCancelled(error: DatabaseError?) {
-
+            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                TODO("Not yet implemented")
             }
+
+            override fun onChildRemoved(p0: DataSnapshot?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("Not yet implemented")
+            }
+
         })
 
-        provincia.addActionListener() {
+        cmbProvincia.addActionListener() {
             // Posar la informació de tots els anys en el JTextArea anomenat area
+            arrel.addChildEventListener(object : ChildEventListener{
+                override fun onChildAdded(p0: DataSnapshot?, p1: String?) {
+                    val fecha = p0!!.child("data/n/nombrePeriodo").value.toString()
+                    //n es el hijo
+                    area.text += fecha+"\n"
+                }
 
+                override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                    TODO("Not yet implemented")
+                }
 
+                override fun onChildRemoved(p0: DataSnapshot?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onCancelled(p0: DatabaseError?) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         }
     }
 }
