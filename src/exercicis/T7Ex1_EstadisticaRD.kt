@@ -87,10 +87,14 @@ class EstadisticaRD : JFrame() {
         cmbProvincia.addActionListener() {
             // Posar la informació de tots els anys en el JTextArea anomenat area
             arrel.addChildEventListener(object : ChildEventListener{
-                override fun onChildAdded(p0: DataSnapshot?, p1: String?) {
-                    val fecha = p0!!.child("data/n/nombrePeriodo").value.toString()
+                override fun onChildAdded(data: DataSnapshot?, p1: String?) {
+                    val elements = data!!.child("data").childrenCount
+                    for(i in 0 until elements){
+                        val fecha = data!!.child("data/$i/nombrePeriodo").value.toString()
+                        area.text += fecha+"\n"
+
+                    }
                     //n es el hijo
-                    area.text += fecha+"\n"
                 }
 
                 override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
