@@ -87,12 +87,16 @@ class EstadisticaRD : JFrame() {
         cmbProvincia.addActionListener() {
             // Posar la informació de tots els anys en el JTextArea anomenat area
             arrel.addChildEventListener(object : ChildEventListener{
-                override fun onChildAdded(data: DataSnapshot?, p1: String?) {
-                    val elements = data!!.child("data").childrenCount
-                    for(i in 0 until elements){
-                        val fecha = data!!.child("data/$i/nombrePeriodo").value.toString()
-                        area.text += fecha+"\n"
-
+                override fun onChildAdded(doc: DataSnapshot?, p1: String?) {
+                    val dataChild = doc!!.child("data").childrenCount
+                    for(i in 0 until dataChild){
+                        val nombre = doc!!.child("nombre").value.toString()
+                        val seleccion = cmbProvincia.selectedItem as String
+                        if (nombre == seleccion){
+                            val fecha = doc!!.child("data/$i/nombrePeriodo").value.toString()
+                            val valor = doc!!.child("data/$i/valor").value.toString()
+                            area.text += "$fecha: $valor\n"
+                        }
                     }
                     //n es el hijo
                 }
@@ -114,6 +118,7 @@ class EstadisticaRD : JFrame() {
                 }
 
             })
+            area.text = ""
         }
     }
 }
