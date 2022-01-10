@@ -1,7 +1,5 @@
 package exercicis
 
-
-
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JComboBox
@@ -17,7 +15,6 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.*
 import java.awt.EventQueue
-
 
 class EstadisticaRD : JFrame() {
 

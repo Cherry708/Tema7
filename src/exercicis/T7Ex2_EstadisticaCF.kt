@@ -1,3 +1,5 @@
+package exercicis
+
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JComboBox
@@ -55,8 +57,9 @@ class EstadisticaCF : JFrame() {
 
         val database = FirestoreClient.getFirestore()
 
-        // Instruccions per a omplir el JComboBox amb les províncies
-        //Deben ser estas las instrucciones?
+        //Instruccions per a omplir el JComboBox amb les províncies
+        //Deben ser estas las instrucciones? No, aqui:
+        //https://console.firebase.google.com/u/1/project/xat-ad/firestore/data/~2FEstadistica~2F02CSKIYYWcUgmiELlx0C
         database.collection("Xats").document("XatProva").collection("missatges").addSnapshotListener { snapshots, e ->
             if (e != null) {
                 System.err.println("Listen failed: " + e)
@@ -82,11 +85,10 @@ class EstadisticaCF : JFrame() {
 
         }
     }
-
-    fun main(args: Array<String>) {
-        EventQueue.invokeLater {
-            EstadisticaCF().isVisible = true
-        }
-    }
 }
 
+fun main(args: Array<String>) {
+    EventQueue.invokeLater {
+        EstadisticaCF().isVisible = true
+    }
+}
