@@ -56,9 +56,9 @@ class EstadisticaRD : JFrame() {
 
         FirebaseApp.initializeApp(options)
 
-            val arrel = FirebaseDatabase.getInstance().getReference("EstadisticaVariacioPoblacional")
+        val arrel = FirebaseDatabase.getInstance().getReference("EstadisticaVariacioPoblacional")
         // Posar tota la llista de províncies al JComboBox anomenat provincia
-        arrel.addChildEventListener(object : ChildEventListener{
+        arrel.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(data: DataSnapshot?, p1: String?) {
                 cmbProvincia.addItem(data!!.child("nombre").value.toString())
             }
@@ -83,19 +83,16 @@ class EstadisticaRD : JFrame() {
 
         cmbProvincia.addActionListener() {
             // Posar la informació de tots els anys en el JTextArea anomenat area
-            arrel.addChildEventListener(object : ChildEventListener{
-                override fun onChildAdded(doc: DataSnapshot?, p1: String?) {
-                    val dataChild = doc!!.child("data").childrenCount
-                    for(i in 0 until dataChild){
-                        val nombre = doc.child("nombre").value.toString()
-                        val seleccion = cmbProvincia.selectedItem as String
-                        if (nombre == seleccion){
-                            val fecha = doc.child("data/$i/nombrePeriodo").value.toString()
-                            val valor = doc.child("data/$i/valor").value.toString()
-                            area.text += "$fecha: $valor\n"
-                        }
-                    }
-                    //n es el hijo
+
+            val path = "EstadisticaVariacioPoblacional/" + cmbProvincia.selectedIndex.toString() + "/data"
+            val bbddRef = FirebaseDatabase.getInstance()
+                .getReference(path)
+
+            bbddRef.addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                    area.text +=
+                        dataSnapshot.child("nombrePeriodo").value.toString() + ": " +
+                                dataSnapshot.child("valor").value.toString() + "\n"
                 }
 
                 override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
