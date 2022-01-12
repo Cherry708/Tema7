@@ -1,4 +1,4 @@
-package exercicis
+
 
 import javax.swing.JFrame
 import javax.swing.JLabel
@@ -12,7 +12,6 @@ import javax.swing.JScrollPane
 import java.io.FileInputStream
 import com.google.firebase.FirebaseOptions
 import com.google.auth.oauth2.GoogleCredentials
-import com.google.cloud.firestore.DocumentChange
 import com.google.firebase.FirebaseApp
 import com.google.firebase.cloud.FirestoreClient
 import java.awt.EventQueue
@@ -20,7 +19,7 @@ import java.awt.EventQueue
 class EstadisticaCF : JFrame() {
 
     val etCombo = JLabel("Llista de províncies:")
-    val comboProv = JComboBox<String>()
+    val cmbProvincia = JComboBox<String>()
 
     val etiqueta = JLabel("Estadístiques:")
     val area = JTextArea()
@@ -34,7 +33,7 @@ class EstadisticaCF : JFrame() {
 
         val panell1 = JPanel(FlowLayout())
         panell1.add(etCombo)
-        panell1.add(comboProv)
+        panell1.add(cmbProvincia)
         getContentPane().add(panell1, BorderLayout.NORTH)
 
         val panell2 = JPanel(BorderLayout())
@@ -55,40 +54,21 @@ class EstadisticaCF : JFrame() {
 
         FirebaseApp.initializeApp(options)
 
-        val database = FirestoreClient.getFirestore()
+        val db = FirestoreClient.getFirestore()
+        val docRef = db.collection("Estadistica")
 
-        //Instruccions per a omplir el JComboBox amb les províncies
-        //Deben ser estas las instrucciones? No, aqui:
-        //https://console.firebase.google.com/u/1/project/xat-ad/firestore/data/~2FEstadistica~2F02CSKIYYWcUgmiELlx0C
-        database.collection("Xats").document("XatProva").collection("missatges").addSnapshotListener { snapshots, e ->
-            if (e != null) {
-                System.err.println("Listen failed: " + e)
-                return@addSnapshotListener
-            }
+        // Instruccions per a omplir el JComboBox amb les províncies
 
-            for (dc in snapshots!!.getDocumentChanges()) {
-                when (dc.getType()) {
-                    DocumentChange.Type.ADDED ->
-                        area.append(dc.getDocument().getString("nom") + ": " + dc.getDocument().getString("contingut") + "\n")
-
-                    DocumentChange.Type.MODIFIED ->
-                        println("Missatge modificat: " + dc.getDocument().getData());
-
-                    DocumentChange.Type.REMOVED ->
-                        println("Missatge esborrat: " + dc.getDocument().getData());
-                }
-            }
-        }
 
         // Instruccions per agafar la informació de tots els anys de la província triada
-        comboProv.addActionListener() {
+        cmbProvincia.addActionListener() {
 
         }
     }
 }
-
 fun main(args: Array<String>) {
     EventQueue.invokeLater {
         EstadisticaCF().isVisible = true
     }
 }
+
