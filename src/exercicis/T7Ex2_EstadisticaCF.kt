@@ -1,5 +1,3 @@
-
-
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JComboBox
@@ -12,10 +10,10 @@ import javax.swing.JScrollPane
 import java.io.FileInputStream
 import com.google.firebase.FirebaseOptions
 import com.google.auth.oauth2.GoogleCredentials
+import com.google.cloud.firestore.DocumentChange
 import com.google.firebase.FirebaseApp
 import com.google.firebase.cloud.FirestoreClient
 import java.awt.EventQueue
-import java.text.SimpleDateFormat
 
 class EstadisticaCF : JFrame() {
 
@@ -57,41 +55,42 @@ class EstadisticaCF : JFrame() {
         FirebaseApp.initializeApp(options)
 
         val db = FirestoreClient.getFirestore()
-        val collectionRef = db.collection("Estadistica")
 
         // Instruccions per a omplir el JComboBox amb les províncies
-        /*
-        Esta es la manera
-         */
         val conjuntoProvincias = mutableSetOf<String>()
-        collectionRef.addSnapshotListener { snapshots, e ->
+
+        db.collection("Estadistica").orderBy("Provincia").addSnapshotListener { snapshots, e ->
             for (dc in snapshots!!.documents) {
-                //Este autogenerado no funciona
-                dc.getString("Provincia")?.let { conjuntoProvincias.add(it) }
-                val provincia = dc.getString("Provincia")
-                if (provincia != null) {
-                    conjuntoProvincias.add(provincia)
-                }
-                area.append(
-                    dc.getString("Provincia")
+                conjuntoProvincias.add(
+                    dc.getString("Provincia") as String
                 )
-                /*
-                Este funciona pero se repiten, para esto queremos añadir a set
-                 */
-                //cmbProvincia.addItem(dc.getString("Provincia"))
+            }
+
+            for (provincia in conjuntoProvincias) {
+                cmbProvincia.addItem(provincia)
             }
         }
 
-        for (provincia in conjuntoProvincias){
-            cmbProvincia.addItem(provincia)
-        }
-        println(conjuntoProvincias.toString())
+
         // Instruccions per agafar la informació de tots els anys de la província triada
         cmbProvincia.addActionListener() {
+            area.text = ""
 
+            db.collection("Estadistica").orderBy("any").addSnapshotListener { snapshots, e ->
+                for (dc in snapshots!!.documents) {
+                    if (dc.getString("Provincia") == cmbProvincia.selectedItem) {
+                        val any = dc.getString("any") as String
+                        val dones = dc.getString("Dones") as String
+                        val homes = dc.getString("Homes") as String
+                        area.text += ("$any: $dones - $homes \n")
+                    }
+
+                }
+            }
         }
     }
 }
+
 fun main(args: Array<String>) {
     EventQueue.invokeLater {
         EstadisticaCF().isVisible = true
