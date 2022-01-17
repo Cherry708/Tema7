@@ -71,6 +71,10 @@ class EstadisticaCF : JFrame() {
                 area.append(
                     dc.getString("Provincia")
                 )
+                /*
+                Este funciona pero se repiten, para esto queremos añadir a set
+                 */
+                //cmbProvincia.addItem(dc.getString("Provincia"))
             }
         }
 
