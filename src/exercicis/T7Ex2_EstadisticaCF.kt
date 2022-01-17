@@ -68,6 +68,10 @@ class EstadisticaCF : JFrame() {
             for (dc in snapshots!!.documents) {
                 //Este autogenerado no funciona
                 dc.getString("Provincia")?.let { conjuntoProvincias.add(it) }
+                val provincia = dc.getString("Provincia")
+                if (provincia != null) {
+                    conjuntoProvincias.add(provincia)
+                }
                 area.append(
                     dc.getString("Provincia")
                 )
