@@ -15,6 +15,7 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.cloud.FirestoreClient
 import java.awt.EventQueue
+import java.text.SimpleDateFormat
 
 class EstadisticaCF : JFrame() {
 
@@ -46,6 +47,7 @@ class EstadisticaCF : JFrame() {
 
         setVisible(true)
 
+        //Referencias
         val serviceAccount = FileInputStream("xat-ad-firebase-adminsdk-my2d0-8c69944b34.json")
 
         val options = FirebaseOptions.Builder()
@@ -55,11 +57,27 @@ class EstadisticaCF : JFrame() {
         FirebaseApp.initializeApp(options)
 
         val db = FirestoreClient.getFirestore()
-        val docRef = db.collection("Estadistica")
+        val collectionRef = db.collection("Estadistica")
 
         // Instruccions per a omplir el JComboBox amb les províncies
+        /*
+        Esta es la manera
+         */
+        val conjuntoProvincias = mutableSetOf<String>()
+        collectionRef.addSnapshotListener { snapshots, e ->
+            for (dc in snapshots!!.documents) {
+                //Este autogenerado no funciona
+                dc.getString("Provincia")?.let { conjuntoProvincias.add(it) }
+                area.append(
+                    dc.getString("Provincia")
+                )
+            }
+        }
 
-
+        for (provincia in conjuntoProvincias){
+            cmbProvincia.addItem(provincia)
+        }
+        println(conjuntoProvincias.toString())
         // Instruccions per agafar la informació de tots els anys de la província triada
         cmbProvincia.addActionListener() {
 
